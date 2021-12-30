@@ -1,3 +1,4 @@
+import "reflect-metadata";
 import { container } from "tsyringe";
 
 import "@shared/container/providers";
@@ -13,7 +14,7 @@ import { ICarsRepository } from "@modules/cars/repositories/ICarsRepository";
 import { ICategoriesRepository } from "@modules/cars/repositories/ICategoriesRepository";
 import { ISpecificationRepository } from "@modules/cars/repositories/ISpecificationsRepository";
 import { RentalsRepository } from "@modules/rentals/infra/typeorm/repositories/RentalRepository";
-import { IRentalRepository } from "@modules/rentals/repositories/IRentalsRepository";
+import { IRentalsRepository } from "@modules/rentals/repositories/IRentalsRepository";
 
 container.registerSingleton<ISpecificationRepository>(
     "SpecificationRepository",
@@ -34,7 +35,7 @@ container.registerSingleton<ICarsImagesRepository>(
     CarsImagesRepository
 );
 
-container.registerSingleton<IRentalRepository>(
+container.registerSingleton<IRentalsRepository>(
     "RentalsRepository",
     RentalsRepository
 );

@@ -2,7 +2,7 @@ import { inject, injectable } from "tsyringe";
 
 import { ICarsRepository } from "@modules/cars/repositories/ICarsRepository";
 import { Rental } from "@modules/rentals/infra/typeorm/entities/Rental";
-import { IRentalRepository } from "@modules/rentals/repositories/IRentalsRepository";
+import { IRentalsRepository } from "@modules/rentals/repositories/IRentalsRepository";
 import { IDateProvider } from "@shared/container/providers/DateProvider/IDateProvider";
 import { AppError } from "@shared/errors/AppError";
 
@@ -15,7 +15,7 @@ interface IRequest {
 class DevolutionRentalUseCase {
     constructor(
         @inject("RentalsRepository")
-        private rentalsRepository: IRentalRepository,
+        private rentalsRepository: IRentalsRepository,
         @inject("CarsRepository")
         private carsRepository: ICarsRepository,
         @inject("DayjsDateProvider")

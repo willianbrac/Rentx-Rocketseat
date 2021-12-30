@@ -1,6 +1,7 @@
+import { ICreateUserDTO } from "@modules/accounts/dtos/ICreateUserDTO";
 import { User } from "@modules/accounts/infra/typeorm/entities/User";
 
-import { ICreateUserDTO, IUsersRepository } from "../IUsersRepository";
+import { IUsersRepository } from "../IUsersRepository";
 
 class UsersRepositoryInMemory implements IUsersRepository {
     users: User[] = [];
@@ -16,25 +17,22 @@ class UsersRepositoryInMemory implements IUsersRepository {
     }
 
     async create({
+        driver_license,
+        email,
         name,
         password,
-        email,
-        driver_license,
-        id,
         avatar,
-    }: ICreateUserDTO): Promise<void> {
+    }: ICreateUserDTO): Promise<User> {
         const user = new User();
-
         Object.assign(user, {
+            driver_license,
+            email,
             name,
             password,
-            email,
-            driver_license,
-            id,
             avatar,
         });
-
         this.users.push(user);
+        return user;
     }
 }
 

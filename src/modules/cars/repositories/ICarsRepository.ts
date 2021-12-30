@@ -10,7 +10,7 @@ interface ICarsRepository {
         name?: string
     ): Promise<Car[]>;
     findById(id: string): Promise<Car>;
-    updateAvailable(id: string, available: boolean): Promise<void>;
+    updateAvailable(car_id: string, availability: boolean): Promise<void>;
 }
 
 export { ICarsRepository, ICreateCarDTO };

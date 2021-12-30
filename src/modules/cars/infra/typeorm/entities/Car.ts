@@ -1,6 +1,7 @@
 import {
     Column,
     CreateDateColumn,
+    Entity,
     JoinColumn,
     JoinTable,
     ManyToMany,
@@ -12,6 +13,7 @@ import { v4 as uuidV4 } from "uuid";
 import { Category } from "./Category";
 import { Specification } from "./Specification";
 
+@Entity("cars")
 class Car {
     @PrimaryColumn()
     id: string;
@@ -37,12 +39,14 @@ class Car {
     @Column()
     brand: string;
 
-    @ManyToOne(() => Category)
-    @JoinColumn({ name: "category_id" })
-    category: Category;
-
     @Column()
     category_id: string;
+
+    @ManyToOne(() => Category)
+    @JoinColumn({
+        name: "category_id",
+    })
+    category: Category;
 
     @ManyToMany(() => Specification)
     @JoinTable({

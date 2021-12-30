@@ -7,6 +7,7 @@ import { app } from "@shared/infra/http/app";
 import createConnection from "@shared/infra/typeorm";
 
 let connection: Connection;
+
 describe("Create Category Controller", () => {
     beforeAll(async () => {
         connection = await createConnection();
@@ -17,12 +18,11 @@ describe("Create Category Controller", () => {
 
         await connection.query(
             `INSERT INTO USERS(id, name, email, password, "isAdmin", created_at, driver_license ) 
-        values('${id}', 'admin', 'admin@rentx.com.br', '${password}', true, 'now()', 'XXXXXX')
-      `
+            values('${id}', 'admin', 'admin@rentx.com.br', '${password}', true, 'now()', 'xxxx')`
         );
     });
 
-    beforeAll(async () => {
+    afterAll(async () => {
         await connection.dropDatabase();
         await connection.close();
     });
@@ -46,8 +46,8 @@ describe("Create Category Controller", () => {
             });
 
         const response = await request(app).get("/categories");
-
+        // console.log(response.body.all);
         expect(response.status).toBe(200);
-        expect(response.body.length).toBe(1);
+        expect(response.body.all.length).toBe(1);
     });
 });

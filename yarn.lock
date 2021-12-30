@@ -4893,7 +4893,7 @@ tsutils@^3.21.0:
   dependencies:
     tslib "^1.8.1"
 
-tsyringe@^4.4.0:
+tsyringe@^4.6.0:
   version "4.6.0"
   resolved "https://registry.yarnpkg.com/tsyringe/-/tsyringe-4.6.0.tgz#14915d3d7f0db35e1cf7269bdbf7c440713c8d07"
   integrity sha512-BMQAZamSfEmIQzH8WJeRu1yZGQbPSDuI9g+yEiKZFIcO46GPZuMOC2d0b52cVBdw1d++06JnDSIIZvEnogMdAw==
@@ -4971,7 +4971,7 @@ typeorm@^0.2.38:
     yargs "^17.0.1"
     zen-observable-ts "^1.0.0"
 
-typescript@^4.3.5:
+typescript@^4.5.2:
   version "4.5.4"
   resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.5.4.tgz#a17d3a0263bf5c8723b9c52f43c5084edf13c2e8"
   integrity sha512-VgYs2A2QIRuGphtzFV7aQJduJ2gyfTljngLzjpfW9FoYZF6xuw1W0vW9ghCKLfcWrCFxK81CSGRAvS1pn4fIUg==

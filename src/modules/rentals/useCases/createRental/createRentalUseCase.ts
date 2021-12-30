@@ -2,7 +2,7 @@ import { inject, injectable } from "tsyringe";
 
 import { ICarsRepository } from "@modules/cars/repositories/ICarsRepository";
 import { Rental } from "@modules/rentals/infra/typeorm/entities/Rental";
-import { IRentalRepository } from "@modules/rentals/repositories/IRentalsRepository";
+import { IRentalsRepository } from "@modules/rentals/repositories/IRentalsRepository";
 import { IDateProvider } from "@shared/container/providers/DateProvider/IDateProvider";
 import { AppError } from "@shared/errors/AppError";
 
@@ -16,7 +16,7 @@ interface IRequest {
 class CreateRentalUseCase {
     constructor(
         @inject("RentalsRepository")
-        private rentalsRepository: IRentalRepository,
+        private rentalsRepository: IRentalsRepository,
         @inject("DayjsDateProvider")
         private dateProvider: IDateProvider,
         @inject("CarsRepository")
@@ -29,12 +29,13 @@ class CreateRentalUseCase {
         expected_return_date,
     }: IRequest): Promise<Rental> {
         const minimumHour = 24;
+
         const carUnavailable = await this.rentalsRepository.findOpenRentalByCar(
             car_id
         );
 
         if (carUnavailable) {
-            throw new AppError("Car is Unavailable!");
+            throw new AppError("Car is unavailable");
         }
 
         const rentalOpenToUser =
@@ -52,7 +53,7 @@ class CreateRentalUseCase {
         );
 
         if (compare < minimumHour) {
-            throw new AppError("Invalid return time");
+            throw new AppError("Invalid return time!");
         }
 
         const rental = await this.rentalsRepository.create({
