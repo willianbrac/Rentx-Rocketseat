@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import { NextFunction, Request, Response } from "express";
 
 import { UsersRepository } from "@modules/accounts/infra/repositories/UsersRepository";
@@ -9,7 +10,9 @@ export async function ensureAdmin(
     next: NextFunction
 ) {
     const { id } = request.user;
+
     const usersRepository = new UsersRepository();
+
     const user = await usersRepository.findById(id);
 
     if (!user.isAdmin) {
