@@ -62,112 +62,114 @@ describe("Create Rental", () => {
     });
 
     it("should not be able to create a new rental if there is another open to the same user", async () => {
-        expect(async () => {
-            const user = await usersRepository.create({
-                name: "Teste",
-                email: "teste@email.com",
-                password: "1234",
-                driver_license: "99888777",
-            });
+        const user = await usersRepository.create({
+            name: "Teste",
+            email: "teste@email.com",
+            password: "1234",
+            driver_license: "99888777",
+        });
 
-            const car1 = await carsRepository.create({
-                name: "Polo",
-                description: "200TSI preto",
-                daily_rate: 200,
-                license_plate: "CBA-1234",
-                fine_amount: 60,
-                brand: "Volkswagen",
-                category_id: "Category",
-            });
+        const car1 = await carsRepository.create({
+            name: "Polo",
+            description: "200TSI preto",
+            daily_rate: 200,
+            license_plate: "CBA-1234",
+            fine_amount: 60,
+            brand: "Volkswagen",
+            category_id: "Category",
+        });
 
-            const car2 = await carsRepository.create({
-                name: "Golf",
-                description: "R vermelho",
-                daily_rate: 250,
-                license_plate: "CBA-1234",
-                fine_amount: 80,
-                brand: "Volkswagen",
-                category_id: "Category",
-            });
+        const car2 = await carsRepository.create({
+            name: "Golf",
+            description: "R vermelho",
+            daily_rate: 250,
+            license_plate: "CBA-1234",
+            fine_amount: 80,
+            brand: "Volkswagen",
+            category_id: "Category",
+        });
 
-            await createRentalUseCase.execute({
-                user_id: user.id,
-                car_id: car1.id,
-                expected_return_date: dayAdd24Hours,
-            });
+        await createRentalUseCase.execute({
+            user_id: user.id,
+            car_id: car1.id,
+            expected_return_date: dayAdd24Hours,
+        });
 
-            await createRentalUseCase.execute({
+        await expect(
+            createRentalUseCase.execute({
                 user_id: user.id,
                 car_id: car2.id,
                 expected_return_date: dayAdd24Hours,
-            });
-        }).rejects.toBeInstanceOf(AppError);
+            })
+        ).rejects.toEqual(
+            new AppError("There's a rental in progress for user!")
+        );
     });
 
     it("should not be able to create a new rental if there is another open to the same car", async () => {
-        expect(async () => {
-            const user1 = await usersRepository.create({
-                name: "user1",
-                email: "user1@email.com",
-                password: "1234",
-                driver_license: "99888777",
-            });
+        const user1 = await usersRepository.create({
+            name: "user1",
+            email: "user1@email.com",
+            password: "1234",
+            driver_license: "99888777",
+        });
 
-            const user2 = await usersRepository.create({
-                name: "user2",
-                email: "user2@email.com",
-                password: "1234",
-                driver_license: "66555444",
-            });
+        const user2 = await usersRepository.create({
+            name: "user2",
+            email: "user2@email.com",
+            password: "1234",
+            driver_license: "66555444",
+        });
 
-            const car = await carsRepository.create({
-                name: "X1",
-                description: "2.0 16v Turbo Activeflex",
-                daily_rate: 400,
-                license_plate: "xyz-1234",
-                fine_amount: 80,
-                brand: "BMW",
-                category_id: "Category",
-            });
+        const car = await carsRepository.create({
+            name: "X1",
+            description: "2.0 16v Turbo Activeflex",
+            daily_rate: 400,
+            license_plate: "xyz-1234",
+            fine_amount: 80,
+            brand: "BMW",
+            category_id: "Category",
+        });
 
-            await createRentalUseCase.execute({
-                user_id: user1.id,
-                car_id: car.id,
-                expected_return_date: dayAdd24Hours,
-            });
+        await createRentalUseCase.execute({
+            user_id: user1.id,
+            car_id: car.id,
+            expected_return_date: dayAdd24Hours,
+        });
 
-            await createRentalUseCase.execute({
+        await expect(
+            createRentalUseCase.execute({
                 user_id: user2.id,
                 car_id: car.id,
                 expected_return_date: dayAdd24Hours,
-            });
-        }).rejects.toBeInstanceOf(AppError);
+            })
+        ).rejects.toEqual(new AppError("Car is unavailable"));
     });
 
     it("should not be able to create a new rental with invalid return time", async () => {
-        expect(async () => {
-            const user = await usersRepository.create({
-                name: "user3",
-                email: "user3@email.com",
-                password: "1234",
-                driver_license: "44333222",
-            });
+        const user = await usersRepository.create({
+            name: "user3",
+            email: "user3@email.com",
+            password: "1234",
+            driver_license: "44333222",
+        });
 
-            const car = await carsRepository.create({
-                name: "Cerato",
-                description: "SX 2.0 Azul",
-                daily_rate: 350,
-                license_plate: "rst-1234",
-                fine_amount: 65,
-                brand: "KIA",
-                category_id: "Category",
-            });
+        const car = await carsRepository.create({
+            name: "Cerato",
+            description: "SX 2.0 Azul",
+            daily_rate: 350,
+            license_plate: "rst-1234",
+            fine_amount: 65,
+            brand: "KIA",
+            category_id: "Category",
+        });
 
-            await createRentalUseCase.execute({
+        await expect(
+            createRentalUseCase.execute({
                 user_id: user.id,
                 car_id: car.id,
                 expected_return_date: dayjs().toDate(),
-            });
-        }).rejects.toBeInstanceOf(AppError);
+            })
+        ).rejects.toEqual(new AppError("Invalid return time!"));
     });
 });
