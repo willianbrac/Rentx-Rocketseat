@@ -14,7 +14,7 @@ import { Category } from "./Category";
 import { Specification } from "./Specification";
 
 @Entity("cars")
-class Car {
+export class Car {
     @PrimaryColumn()
     id: string;
 
@@ -66,5 +66,3 @@ class Car {
         }
     }
 }
-
-export { Car };

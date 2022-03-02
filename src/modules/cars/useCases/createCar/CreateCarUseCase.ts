@@ -15,12 +15,11 @@ interface IRequest {
 }
 
 @injectable()
-class CreateCarUseCase {
+export class CreateCarUseCase {
     constructor(
         @inject("CarsRepository")
         private carsRepository: ICarsRepository
     ) {}
-
     async execute({
         name,
         description,
@@ -33,11 +32,7 @@ class CreateCarUseCase {
         const carAlreadyExists = await this.carsRepository.findByLicensePlate(
             license_plate
         );
-
-        if (carAlreadyExists) {
-            throw new AppError("Car alread exists");
-        }
-
+        if (carAlreadyExists) throw new AppError("Car alread exists");
         const car = await this.carsRepository.create({
             name,
             description,
@@ -47,9 +42,6 @@ class CreateCarUseCase {
             brand,
             category_id,
         });
-
         return car;
     }
 }
-
-export { CreateCarUseCase };

@@ -11,7 +11,6 @@ describe("Create Car", () => {
         carsRepositoryInMemory = new CarsRepositoryInMemory();
         createCarUseCase = new CreateCarUseCase(carsRepositoryInMemory);
     });
-
     it("should be able to create a new car", async () => {
         const car = await createCarUseCase.execute({
             name: "Name car",
@@ -22,10 +21,8 @@ describe("Create Car", () => {
             brand: "Brand",
             category_id: "Category",
         });
-
         expect(car).toHaveProperty("id");
     });
-
     it("should not be able to create a car with exists license plate", async () => {
         await createCarUseCase.execute({
             name: "Car1",
@@ -36,7 +33,6 @@ describe("Create Car", () => {
             brand: "Brand",
             category_id: "Category",
         });
-
         await expect(
             createCarUseCase.execute({
                 name: "Car2",
@@ -49,7 +45,6 @@ describe("Create Car", () => {
             })
         ).rejects.toEqual(new AppError("Car alread exists"));
     });
-
     it("should not be able to create a car with available true by default", async () => {
         const car = await createCarUseCase.execute({
             name: "Car available",

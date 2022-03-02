@@ -6,12 +6,11 @@ import { IUsersRepository } from "@modules/accounts/repositories/IUsersRepositor
 import { AppError } from "@shared/errors/AppError";
 
 @injectable()
-class CreateUserUseCase {
+export class CreateUserUseCase {
     constructor(
         @inject("UsersRepository")
         private usersRepository: IUsersRepository
     ) {}
-
     async execute({
         name,
         email,
@@ -19,12 +18,8 @@ class CreateUserUseCase {
         driver_license,
     }: ICreateUserDTO): Promise<void> {
         const userAlreadyExists = await this.usersRepository.findByEmail(email);
-
-        if (userAlreadyExists) {
-            throw new AppError("User alread exists");
-        }
+        if (userAlreadyExists) throw new AppError("User alread exists");
         const passwordHash = await hash(password, 8);
-
         await this.usersRepository.create({
             name,
             email,
@@ -33,4 +28,3 @@ class CreateUserUseCase {
         });
     }
 }
-export { CreateUserUseCase };

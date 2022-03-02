@@ -1,4 +1,4 @@
-// import { resolve } from "path";
+import { resolve } from "path";
 import { inject, injectable } from "tsyringe";
 import { v4 as uuidV4 } from "uuid";
 
@@ -9,17 +9,14 @@ import { IMailProvider } from "@shared/container/providers/MailProvider/IMailPro
 import { AppError } from "@shared/errors/AppError";
 
 @injectable()
-class SendForgotPasswordMailUseCase {
+export class SendForgotPasswordMailUseCase {
     constructor(
         @inject("UsersRepository")
         private usersRepository: IUsersRepository,
-
         @inject("UsersTokensRepository")
         private usersTokensRepository: IUsersTokensRepository,
-
         @inject("DayjsDateProvider")
         private dateProvider: IDateProvider,
-
         @inject("EtherialMailProvider")
         private mailProvider: IMailProvider
     ) {}
@@ -29,7 +26,6 @@ class SendForgotPasswordMailUseCase {
         // verifica se existe um user com o email passado
         const user = await this.usersRepository.findByEmail(email);
 
-        /*
         const templatePath = resolve(
             __dirname,
             "..",
@@ -38,7 +34,6 @@ class SendForgotPasswordMailUseCase {
             "emails",
             "forgotPassword.hbs"
         );
-        */
 
         // Lança a exceção se o user não existir
         if (!user) {
@@ -58,19 +53,16 @@ class SendForgotPasswordMailUseCase {
             expires_date,
         });
 
-        /*
         const variables = {
             name: user.name,
             link: `${process.env.FORGOT_MAIL_URL}${token}`,
         };
-        */
 
         await this.mailProvider.sendMail(
             email,
-            "Recuperação de Senha",
-            `Link para o reset da senha ${token}`
+            "Recuperção de senha",
+            variables,
+            templatePath
         );
     }
 }
-
-export { SendForgotPasswordMailUseCase };

@@ -1,19 +1,15 @@
 import { getRepository, Repository } from "typeorm";
 
-import {
-    ICarsRepository,
-    ICreateCarDTO,
-} from "@modules/cars/repositories/ICarsRepository";
+import { ICreateCarDTO } from "@modules/cars/dtos/ICreateCarDTO";
+import { ICarsRepository } from "@modules/cars/repositories/ICarsRepository";
 
 import { Car } from "../entities/Car";
 
-class CarsRepository implements ICarsRepository {
+export class CarsRepository implements ICarsRepository {
     private repository: Repository<Car>;
-
     constructor() {
         this.repository = getRepository(Car);
     }
-
     async create({
         name,
         description,
@@ -39,14 +35,12 @@ class CarsRepository implements ICarsRepository {
         await this.repository.save(car);
         return car;
     }
-
     async findByLicensePlate(license_plate: string): Promise<Car> {
         const car = await this.repository.findOne({
             license_plate,
         });
         return car;
     }
-
     async findAvailable(
         brand?: string,
         category_id?: string,
@@ -56,28 +50,20 @@ class CarsRepository implements ICarsRepository {
             .createQueryBuilder("car")
             .where("available = :available", { available: true });
 
-        if (brand) {
-            carsQuery.andWhere("car.brand = :brand", { brand });
-        }
+        if (brand) carsQuery.andWhere("car.brand = :brand", { brand });
 
-        if (name) {
-            carsQuery.andWhere("car.name = :name", { name });
-        }
+        if (name) carsQuery.andWhere("car.name = :name", { name });
 
-        if (category_id) {
+        if (category_id)
             carsQuery.andWhere("car.category_id = :name", { category_id });
-        }
 
         const cars = await carsQuery.getMany();
-
         return cars;
     }
-
     async findById(id: string): Promise<Car> {
         const car = await this.repository.findOne(id);
         return car;
     }
-
     async updateAvailable(
         car_id: string,
         availability: boolean
@@ -93,5 +79,3 @@ class CarsRepository implements ICarsRepository {
             .execute();
     }
 }
-
-export { CarsRepository };

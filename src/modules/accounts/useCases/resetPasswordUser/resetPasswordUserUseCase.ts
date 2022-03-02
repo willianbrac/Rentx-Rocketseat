@@ -12,7 +12,7 @@ interface IRequest {
 }
 
 @injectable()
-class ResetPasswordUserUseCase {
+export class ResetPasswordUserUseCase {
     constructor(
         @inject("UsersTokensRepository")
         private usersTokensRepository: IUsersTokensRepository,
@@ -28,9 +28,7 @@ class ResetPasswordUserUseCase {
         );
 
         // se o usertoken não existir uma exceção será lançada
-        if (!userToken) {
-            throw new AppError("Token invalid!");
-        }
+        if (!userToken) throw new AppError("Token invalid!");
 
         // verfica se o token esta expirado
         if (
@@ -42,14 +40,16 @@ class ResetPasswordUserUseCase {
             throw new AppError("Token expired!");
         }
 
+        // verifica se o usuario existe
         const user = await this.usersRepository.findById(userToken.user_id);
 
+        // criptografa a nova senha
         user.password = await hash(password, 8);
 
+        // Atualiza o token
         await this.usersRepository.create(user);
 
+        // Remove o token antigo
         await this.usersTokensRepository.deleteById(userToken.id);
     }
 }
-
-export { ResetPasswordUserUseCase };

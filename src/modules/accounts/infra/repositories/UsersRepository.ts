@@ -5,9 +5,8 @@ import { IUsersRepository } from "@modules/accounts/repositories/IUsersRepositor
 
 import { User } from "../typeorm/entities/User";
 
-class UsersRepository implements IUsersRepository {
+export class UsersRepository implements IUsersRepository {
     private repository: Repository<User>;
-
     constructor() {
         this.repository = getRepository(User);
     }
@@ -15,12 +14,10 @@ class UsersRepository implements IUsersRepository {
         const user = await this.repository.findOne({ id });
         return user;
     }
-
     async findByEmail(email: string): Promise<User> {
         const user = await this.repository.findOne({ email });
         return user;
     }
-
     async create(data: ICreateUserDTO): Promise<User> {
         const { name, email, password, driver_license, avatar, id } = data;
         const user = this.repository.create({
@@ -31,10 +28,7 @@ class UsersRepository implements IUsersRepository {
             avatar,
             id,
         });
-
         await this.repository.save(user);
         return user;
     }
 }
-
-export { UsersRepository };
